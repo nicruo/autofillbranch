@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Azure DevOps - Branch Autofill
 // @namespace    http://nicruo.github.io
-// @version      0.1
+// @version      0.1.1
 // @description  Autofill the branch name on Azure DevOps
 // @author       nicruo
 // @match        https://*.visualstudio.com/*
