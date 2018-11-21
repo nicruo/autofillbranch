@@ -17,29 +17,20 @@
     let branchInput;
 
     let timerId = setInterval(() => {
-        if(checkForDialog()){
-
-            if(!dialogOpen)
-            {
+        if(checkForDialog()) {
+            if(!dialogOpen) {
                 dialogOpen = true;
                 let taskString = task.textContent.trim();
                 branchInput.value = taskString.split(/[ \u00A0]/g).splice(0, 5).join("_");
-
                 triggerEvent(branchInput, 'keyup');
-                //alert("A editar");
             }
-
         } else {
-
             if(dialogOpen) {
-                //alert("Parou editar");
                 dialogOpen = false;
                 branchInput = null;
                 task = null;
             }
-
-        }}, 1000);
-    // Your code here...
+    }}, 1000);
 
     function checkForDialog() {
         branchInput = document.querySelector('[placeholder="Enter your branch name"]');
@@ -50,7 +41,7 @@
         return false;
     }
 
-    function triggerEvent(el, type){
+    function triggerEvent(el, type) {
         if ('createEvent' in document) {
             // modern browsers, IE9+
             var e = document.createEvent('HTMLEvents');
