@@ -1,35 +1,55 @@
 // ==UserScript==
 // @name         Azure DevOps - Branch Autofill
 // @namespace    http://nicruo.github.io
-// @version      0.1.2
+// @version      0.1.3
 // @description  Autofill the branch name on Azure DevOps
 // @author       nicruo
 // @match        https://*.visualstudio.com/*
-// @grant        none
+// @require            https://openuserjs.org/src/libs/sizzle/GM_config.js
+// @grant              GM_getValue
+// @grant              GM_setValue
+// @grant           GM_registerMenuCommand
 // ==/UserScript==
 
 (function() {
     'use strict';
 
+    let fields = {
+        'max-words': {
+            'label': 'Max Words',
+            'type': 'int',
+            'default' : 5
+        }
+    };
+
+    GM_config.init({
+        id: 'autofillbranch_config',
+        title: 'Configuration',
+        fields: fields
+    });
+
+    GM_registerMenuCommand("Configure Branch Autofill", () => {
+        GM_config.open();
+    });
+
     let dialogOpen = false;
     let task;
     let type;
+    let branchInput;
 
     let improvClass = "bowtie-symbol-color-palette";
     let bugClass = "bowtie-symbol-bug";
-
-
-    let branchInput;
 
     let timerId = setInterval(() => {
         if(checkForDialog()) {
             if(!dialogOpen) {
                 dialogOpen = true;
+                let maxWords = GM_config.get('max-words');
                 let taskString = task.textContent.trim();
 
                 let typeString = hasClass(type, improvClass) ? "improv" : (hasClass(type, bugClass) ? "bug" : "pbi");
 
-                branchInput.value = typeString + "/" + taskString.replace(/[^\w\s]/gi, '').replace(/\s+/g,' ').split(/[ \u00A0]/g).splice(0, 10).join("_");
+                branchInput.value = typeString + "/" + taskString.replace(/[^\w\s]/gi, '').replace(/\s+/g,' ').split(/[ \u00A0]/g).splice(0, +maxWords).join("_");
                 triggerEvent(branchInput, 'keyup');
             }
         } else {
