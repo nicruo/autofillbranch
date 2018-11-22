@@ -13,6 +13,11 @@
 
     let dialogOpen = false;
     let task;
+    let type;
+
+    let improvClass = "bowtie-symbol-color-palette";
+    let bugClass = "bowtie-symbol-bug";
+
 
     let branchInput;
 
@@ -21,7 +26,10 @@
             if(!dialogOpen) {
                 dialogOpen = true;
                 let taskString = task.textContent.trim();
-                branchInput.value = taskString.split(/[ \u00A0]/g).splice(0, 5).join("_");
+
+                let typeString = hasClass(type, improvClass) ? "improv" : (hasClass(type, bugClass) ? "bug" : "pbi");
+
+                branchInput.value = typeString + "/" + taskString.replace(/[^\w\s]/gi, '').replace(/\s+/g,' ').split(/[ \u00A0]/g).splice(0, 10).join("_");
                 triggerEvent(branchInput, 'keyup');
             }
         } else {
@@ -36,9 +44,15 @@
         branchInput = document.querySelector('[placeholder="Enter your branch name"]');
         if(branchInput !== null) {
             task = document.querySelector("div.vc-create-branch-dialog div.la-primary-data");
+            type = document.querySelector("div.vc-create-branch-dialog div.la-primary-icon .bowtie-icon");
+
             return task !== null;
         }
         return false;
+    }
+
+    function hasClass(element, className) {
+        return (' ' + element.className + ' ').indexOf(' ' + className+ ' ') > -1;
     }
 
     function triggerEvent(el, type) {
